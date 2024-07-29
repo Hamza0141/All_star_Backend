@@ -84,13 +84,14 @@ CREATE TABLE IF NOT EXISTS `employee_role` (
   `company_role_id` int(11) NOT NULL,
   PRIMARY KEY (employee_role_id),
   FOREIGN KEY (employee_id) REFERENCES employee(employee_id),
-  -- FOREIGN KEY (company_role_id) REFERENCES company_roles(company_role_id)
+  FOREIGN KEY (company_role_id) REFERENCES company_roles(company_role_id)
 ) ENGINE=InnoDB;
 
 -- Order tables  
 CREATE TABLE IF NOT EXISTS `orders` (
   `order_id` int(11) NOT NULL AUTO_INCREMENT,
   `employee_id` int(11) NOT NULL,
+  `assigned_employee_id` int(11) NOT NULL,
   `customer_id` int(11) NOT NULL,
   `vehicle_id` int(11) NOT NULL,
   `order_date` DATETIME DEFAULT CURRENT_TIMESTAMP,

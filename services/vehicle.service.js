@@ -56,6 +56,9 @@ const createVehicle = async (vehicleInfo) => {
 };
 
 const updateVehicleById = async (id ,vehicleInfo) => {
+ if (!vehicleInfo || Object.values(vehicleInfo).some((value) => value === "")) {
+   return; // Return early if vehicleInfo is null or any field has an empty value
+ }
   try {
     const query = `UPDATE customer_vehicle_info SET vehicle_year = ?, vehicle_make = ?, vehicle_model = ?, vehicle_type = ?, vehicle_mileage = ?, vehicle_tag = ?, vehicle_serial = ?, vehicle_color = ?
     WHERE vehicle_id = ?;`;
@@ -96,8 +99,15 @@ const getCustomerVehicleByCustomerHash = async (customer_hash) => {
   }
 };
 
-
-
+const getVehicleByVehicleId = async (id) => {
+  try {
+    const query = `SELECT * FROM customer_vehicle_info WHERE vehicle_id = ?;`;
+    const rows = await conn.query(query, [id]);
+    return rows;
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 module.exports = {
   checkIfVehicleExists,
@@ -105,4 +115,5 @@ module.exports = {
   updateVehicleById,
   getCustomerVehicleByCustomerId,
   getCustomerVehicleByCustomerHash,
+  getVehicleByVehicleId,
 };

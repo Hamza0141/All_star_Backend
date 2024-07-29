@@ -69,10 +69,26 @@ const getCustomerVehicleByHash = async (req, res, next) => {
   }
 };
 
+const getVehicleById = async (req, res, next) => {
+  const id = req.params.vehicle_id;
+  const customerVehicle = await vehicleService.getVehicleByVehicleId(
+    id
+  );
+  if (!customerVehicle) {
+    res.status(400).json({
+      error: "Failed to get the vehicle!",
+    });
+  } else {
+    res.status(200).json(customerVehicle);
+  }
+};
+
+
 
 
 module.exports = {
   createVehicle,
+  getVehicleById,
   updateVehicleById,
   getCustomerVehicle,
   getCustomerVehicleByHash,

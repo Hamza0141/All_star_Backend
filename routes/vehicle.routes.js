@@ -12,5 +12,9 @@ router.get(
   "/api/vehiclehash/:hash",
   vehicleControllers.getCustomerVehicleByHash
 );
+router.get(
+  "/api/vehicleid/:vehicle_id",
+  vehicleControllers.getVehicleById
+);
 
 module.exports = router

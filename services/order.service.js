@@ -8,14 +8,15 @@ const addOrder = async (orderInfo) => {
     // Insert into orders table
     const query1 = `
       INSERT INTO orders 
-      (employee_id, customer_id, vehicle_id, order_hash) 
-      VALUES (?, ?, ?, ?)
+      (employee_id, customer_id, vehicle_id, order_hash,assigned_employee_id) 
+      VALUES (?, ?, ?, ?,?)
     `;
     const params1 = [
       orderInfo.employee_id,
       orderInfo.customer_id,
       orderInfo.vehicle_id,
       order_hash,
+      orderInfo.assigned_employee_id,
     ];
     const rows1 = await conn.query(query1, params1);
     
@@ -242,31 +243,36 @@ GROUP BY
 const getAllOrders = async () => {
   try {
     const query = `SELECT
-    o.*,
-    ci.customer_email,
-    ci.customer_phone_number,
-    cif.customer_first_name,
-    cif.customer_last_name,
-    cvi.vehicle_make,
-    cvi.vehicle_year,
-    cvi.vehicle_model,
-    cvi.vehicle_tag,
-    o.order_date,
-    ei.employee_first_name,
-    ei.employee_last_name,
-    os.order_status
-FROM
-    orders o
-JOIN
-    customer_identifier ci ON o.customer_id = ci.customer_id
-JOIN
-    customer_info cif ON ci.customer_id = cif.customer_id
-JOIN
-    customer_vehicle_info cvi ON o.vehicle_id = cvi.vehicle_id
-JOIN
-    employee_info ei ON o.employee_id = ei.employee_id
-JOIN
-    order_status os ON o.order_id = os.order_id ORDER BY o.order_id DESC;
+      o.*,
+      ci.customer_email,
+      ci.customer_phone_number,
+      cif.customer_first_name,
+      cif.customer_last_name,
+      cvi.vehicle_make,
+      cvi.vehicle_year,
+      cvi.vehicle_model,
+      cvi.vehicle_tag,
+      o.order_date,
+      ei.employee_first_name,
+      ei.employee_last_name,
+      assigned_ei.employee_first_name AS assigned_employee_first_name,
+      assigned_ei.employee_last_name AS assigned_employee_last_name,
+      os.order_status
+    FROM
+      orders o
+    JOIN
+      customer_identifier ci ON o.customer_id = ci.customer_id
+    JOIN
+      customer_info cif ON ci.customer_id = cif.customer_id
+    JOIN
+      customer_vehicle_info cvi ON o.vehicle_id = cvi.vehicle_id
+    JOIN
+      employee_info ei ON o.employee_id = ei.employee_id
+    JOIN
+      employee_info assigned_ei ON o.assigned_employee_id = assigned_ei.employee_id
+    JOIN
+      order_status os ON o.order_id = os.order_id
+    ORDER BY o.order_id DESC;
 
 `;
     const rows = await conn.query(query);
