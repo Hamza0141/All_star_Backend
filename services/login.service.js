@@ -16,6 +16,8 @@ async function logIn(employeeData) {
       };
       return returnData;
     }
+
+    
     const passwordMatch = await bcrypt.compare(employeeData.employee_password, employee[0].employee_password_hashed);
     if (!passwordMatch) {
       returnData = {
